@@ -2,16 +2,17 @@ package main
 
 import (
 	"log"
+	"scriptura/scriptura-api/db"
+	"scriptura/scriptura-api/router"
 
 	"github.com/gofiber/fiber/v2"
 )
 
 func main() {
+
+	db.Connect()
 	app := fiber.New()
 
-	app.Get("/", func(c *fiber.Ctx) error {
-		return c.SendString("Hello, World!")
-	})
-
+	router.SetupRoutes(app)
 	log.Fatal(app.Listen(":3000"))
 }
