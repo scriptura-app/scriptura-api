@@ -1,13 +1,18 @@
 package handler
 
 import (
-	"fmt"
+	"encoding/json"
 	"log"
 	"os"
 	"scriptura/scriptura-api/db"
 
 	"github.com/gofiber/fiber/v2"
 )
+
+type Result struct {
+	VerseNum int    `json:"verse_num"`
+	Text     string `json:"text"`
+}
 
 func GetVerse(c *fiber.Ctx) error {
 	// id := c.Params("id")
@@ -16,10 +21,16 @@ func GetVerse(c *fiber.Ctx) error {
 	if err != nil {
 		log.Fatal(err)
 	}
-	rows, err := db.Query(string(query))
+	var result []Result
+
+	db.Raw(string(query)).Scan(&result)
+
+	jsonData, err := json.Marshal(result)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(rows)
-	return c.SendString("hey")
+
+	c.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSONCharsetUTF8)
+
+	return c.SendString(string(jsonData))
 }

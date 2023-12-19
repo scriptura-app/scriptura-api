@@ -1,23 +1,21 @@
 package db
 
 import (
-	"database/sql"
 	"os"
 
-	_ "github.com/lib/pq"
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
-var DB *sql.DB
+var DB *gorm.DB
 
 func Connect() error {
 	var err error
 
-	DB, err = sql.Open("postgres", os.Getenv("POSTGRES_URI"))
+	DB, err = gorm.Open(postgres.Open(os.Getenv("POSTGRES_URI")), &gorm.Config{})
 	if err != nil {
 		return err
 	}
-	if err = DB.Ping(); err != nil {
-		return err
-	}
+
 	return nil
 }
