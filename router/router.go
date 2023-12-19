@@ -10,7 +10,12 @@ import (
 func SetupRoutes(app fiber.Router) {
 	api := app.Group("/api", logger.New())
 
-	// Auth
+	//temp inline json middleware
+	api.Use(func(c *fiber.Ctx) error {
+		c.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSONCharsetUTF8)
+		return c.Next()
+	})
+
 	verse := api.Group("/verse")
 	verse.Get("/", handler.GetVerse)
 }
