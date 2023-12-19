@@ -16,6 +16,6 @@ func SetupRoutes(app fiber.Router) {
 		return c.Next()
 	})
 
-	verse := api.Group("/verse")
+	verse := api.Group("/bible")
 	verse.Get("/", handler.GetVerse)
 }
