@@ -2,12 +2,14 @@ package models
 
 type Verse struct {
 	ID          uint   `json:"id"`
-	BookId      uint   `json:"bookId"`
+	BookName    string `json:"book"`
 	ChapterNum  uint   `json:"chapterNum"`
 	VerseNum    uint   `json:"verseNum"`
-	VerseCode   uint   `json:"verseCode"`
 	YearWritten int    `json:"year"`
 	Text        string `json:"text"`
+	// BookId        uint   `json:"bookId"`
+	// TheographicId string `json:"thegraphicId"`
+	// VerseCode     uint   `json:"verseCode"`
 }
 
 type Tabler interface {
