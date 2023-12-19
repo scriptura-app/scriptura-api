@@ -16,8 +16,10 @@ func GetVerse(c *fiber.Ctx) error {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(string(query))
-	rows, _ := db.Query(string(query), 60, 1, 1)
+	rows, err := db.Query(string(query))
+	if err != nil {
+		log.Fatal(err)
+	}
 	fmt.Println(rows)
 	return c.SendString("hey")
 }

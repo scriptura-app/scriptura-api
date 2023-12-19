@@ -6,11 +6,17 @@ import (
 	"scriptura/scriptura-api/router"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/joho/godotenv"
 )
 
 func main() {
+	godotenv.Load()
 
-	db.Connect()
+	err := db.Connect()
+
+	if err != nil {
+		panic(err)
+	}
 	app := fiber.New()
 
 	router.SetupRoutes(app)

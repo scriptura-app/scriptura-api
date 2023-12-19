@@ -2,22 +2,17 @@ package db
 
 import (
 	"database/sql"
-	"fmt"
+	"os"
+
+	_ "github.com/lib/pq"
 )
 
 var DB *sql.DB
 
-const (
-	host     = "localhost"
-	port     = 5432 // Default port
-	user     = "postgres"
-	password = "password"
-	dbname   = "fiber_demo"
-)
-
 func Connect() error {
 	var err error
-	DB, err = sql.Open("postgres", fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname))
+
+	DB, err = sql.Open("postgres", os.Getenv("POSTGRES_URI"))
 	if err != nil {
 		return err
 	}
