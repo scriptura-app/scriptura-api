@@ -32,7 +32,9 @@ type ResponseItemLinks struct {
 
 type ResponseMeta struct {
 	Pagination struct {
-		TotalCount  int64 `json:"totalItems,omitempty"`
-		CurrentPage int64 `json:"currentPage,omitempty"`
+		TotalItems  int `json:"totalItems,omitempty"`
+		CurrentPage int `json:"currentPage,omitempty"`
+		PageSize    int `json:"pageSize,omitempty"`
+		TotalPages  int `json:"totalPages,omitempty"`
 	} `json:"pagination,omitempty"`
 }
