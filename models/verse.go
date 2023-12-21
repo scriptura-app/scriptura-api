@@ -1,7 +1,7 @@
 package models
 
 type Verse struct {
-	ID            string `json:"-"`
+	Id            string `json:"-"`
 	BookName      string `json:"bookName,omitempty"`
 	ChapterNum    uint   `json:"chapterNum,omitempty"`
 	VerseNum      uint   `json:"verseNum,omitempty"`

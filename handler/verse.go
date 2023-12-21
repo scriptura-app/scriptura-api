@@ -3,6 +3,7 @@ package handler
 import (
 	"scriptura/scriptura-api/db"
 	m "scriptura/scriptura-api/models"
+	"scriptura/scriptura-api/utils"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -26,29 +27,7 @@ func GetVerse(c *fiber.Ctx) error {
 		Limit(limit).
 		Scan(&verses)
 
-	response, _ := formatVerseResponse(verses, int(totalItems), offset, limit)
+	response, _ := utils.FormatResponse(verses, int(totalItems), offset, limit)
 
 	return c.JSON(response)
-}
-
-func formatVerseResponse(verses []m.Verse, totalItems int, offset int, limit int) (m.SliceResponse, error) {
-
-	responseItems := make([]m.ResponseItem, len(verses))
-	for i, verse := range verses {
-		responseItems[i] = m.ResponseItem{
-			Id:         verse.ID,
-			Type:       "verse",
-			Attributes: verse,
-		}
-	}
-
-	var response m.SliceResponse
-	response.Data = responseItems
-
-	response.Meta.Pagination.TotalItems = totalItems
-	response.Meta.Pagination.CurrentPage = offset/limit + 1
-	response.Meta.Pagination.PageSize = limit
-	response.Meta.Pagination.TotalPages = (totalItems + limit - 1) / limit
-
-	return response, nil
 }
