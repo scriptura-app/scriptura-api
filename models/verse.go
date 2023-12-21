@@ -1,21 +1,18 @@
 package models
 
 type Verse struct {
-	ID          uint   `json:"id"`
-	BookName    string `json:"book"`
-	ChapterNum  uint   `json:"chapterNum"`
-	VerseNum    uint   `json:"verseNum"`
-	YearWritten int    `json:"year"`
-	Text        string `json:"text"`
-	// BookId        uint   `json:"bookId"`
-	// TheographicId string `json:"thegraphicId"`
-	// VerseCode     uint   `json:"verseCode"`
+	ID            string `json:"id,omitempty"`
+	BookName      string `json:"bookName,omitempty"`
+	ChapterNum    uint   `json:"chapterNum,omitempty"`
+	VerseNum      uint   `json:"verseNum,omitempty"`
+	YearWritten   int    `json:"yearWritten,omitempty"`
+	Text          string `json:"text,omitempty"`
+	BookId        uint   `json:"bookId,omitempty"`
+	TheographicId string `json:"-"`
+	VerseCode     uint   `json:"verseCode,omitempty"`
 }
 
-type Tabler interface {
-	TableName() string
-}
-
-func (Verse) TableName() string {
-	return "verse"
+func (v Verse) ClearAtributes() Verse {
+	v.ID = ""
+	return v
 }
