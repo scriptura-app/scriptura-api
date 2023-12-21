@@ -1,7 +1,7 @@
 package models
 
 type Verse struct {
-	ID            string `json:"id,omitempty"`
+	ID            string `json:"-"`
 	BookName      string `json:"bookName,omitempty"`
 	ChapterNum    uint   `json:"chapterNum,omitempty"`
 	VerseNum      uint   `json:"verseNum,omitempty"`
@@ -10,9 +10,4 @@ type Verse struct {
 	BookId        uint   `json:"bookId,omitempty"`
 	TheographicId string `json:"-"`
 	VerseCode     uint   `json:"verseCode,omitempty"`
-}
-
-func (v Verse) ClearAtributes() Verse {
-	v.ID = ""
-	return v
 }

@@ -36,7 +36,7 @@ func formatVerseResponse(verses []m.Verse, totalCount int64) (m.SliceResponse, e
 		responseItems[i] = m.ResponseItem{
 			Id:         verse.ID,
 			Type:       "verse",
-			Attributes: verse.ClearAtributes(),
+			Attributes: verse,
 		}
 	}
 
