@@ -2,6 +2,7 @@ package router
 
 import (
 	"scriptura/scriptura-api/handler"
+	m "scriptura/scriptura-api/middleware"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -10,11 +11,8 @@ import (
 func SetupRoutes(app fiber.Router) {
 	api := app.Group("/api", logger.New())
 
-	//temp inline json middleware
-	api.Use(func(c *fiber.Ctx) error {
-		c.Set(fiber.HeaderContentType, fiber.MIMEApplicationJSONCharsetUTF8)
-		return c.Next()
-	})
+	api.Use(m.JsonMiddleware)
+	api.Use(m.PaginationMiddleware)
 
 	verse := api.Group("/bible/:book?/:chapter?/:verse?")
 	verse.Get("/", handler.GetVerse)

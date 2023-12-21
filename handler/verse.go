@@ -20,8 +20,8 @@ func GetVerse(c *fiber.Ctx) error {
 
 	query.Count(&totalCount)
 
-	query.Offset(10).
-		Limit(10).
+	query.Offset(c.Locals("offset").(int)).
+		Limit(c.Locals("limit").(int)).
 		Scan(&verses)
 
 	response, _ := formatVerseResponse(verses, totalCount)
