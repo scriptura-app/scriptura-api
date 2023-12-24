@@ -10,7 +10,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 )
 
-func GetVerse(c *fiber.Ctx) error {
+func GetSingleVerse(c *fiber.Ctx) error {
 	db := db.DB
 	var verses []m.Verse
 	var totalItems int64
@@ -53,4 +53,8 @@ func GetVerse(c *fiber.Ctx) error {
 	response, _ := utils.FormatResponse(verses, int(totalItems), offset, limit)
 
 	return c.JSON(response)
+}
+
+func GetVerseRange(c *fiber.Ctx) error {
+	return c.JSON(c.Params("from") + " " + c.Params("to"))
 }
