@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"scriptura/scriptura-api/db"
 	m "scriptura/scriptura-api/models"
+	r "scriptura/scriptura-api/repository"
 	"scriptura/scriptura-api/utils"
 	"strconv"
 
@@ -11,6 +12,15 @@ import (
 )
 
 func GetSingleVerse(c *fiber.Ctx) error {
+	bk, ch, vr := c.Params("book"), c.Params("chapter"), c.Params("verse")
+
+	verse, _ := r.GetVerseByRef("bible_en_kjv", bk, ch, vr)
+
+	res := utils.FormatResponse(verse)
+	return c.JSON(res)
+}
+
+func GetVerseRange(c *fiber.Ctx) error {
 	db := db.DB
 	var verses []m.Verse
 	var totalItems int64
@@ -50,7 +60,7 @@ func GetSingleVerse(c *fiber.Ctx) error {
 		Limit(limit).
 		Scan(&verses)
 
-	response, _ := utils.FormatResponse(verses, int(totalItems), offset, limit)
+	response, _ := utils.FormatPaginationResponse(verses, int(totalItems), offset, limit)
 
 	return c.JSON(response)
 }

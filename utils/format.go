@@ -5,7 +5,13 @@ import (
 	m "scriptura/scriptura-api/models"
 )
 
-func FormatResponse(resources interface{}, totalItems int, offset int, limit int) (m.SliceResponse, error) {
+func FormatResponse(resource interface{}) m.SingleResponse {
+	var response m.SingleResponse
+	response.Data.Attributes = resource
+	return response
+}
+
+func FormatPaginationResponse(resources interface{}, totalItems int, offset int, limit int) (m.SliceResponse, error) {
 	var response m.SliceResponse
 
 	responseItems, err := formatResponseItems(resources)
