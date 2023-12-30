@@ -18,9 +18,3 @@ type SingleResponse struct {
 	Data interface{} `json:"data,omitempty"`
 	Response
 }
-
-type ResponseItemLinks struct {
-	Self        string `json:"self,omitempty"`
-	Related     string `json:"related,omitempty"`
-	DescribedBy string `json:"describedby,omitempty"`
-}

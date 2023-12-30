@@ -13,8 +13,8 @@ func GetSingleVerse(c *fiber.Ctx) error {
 
 	verse, _ := r.GetVerseByRef("en_kjv", bk, ch, vr)
 
-	res := utils.FormatResponse(verse)
-	return c.JSON(res)
+	response := utils.FormatResponse(verse)
+	return c.JSON(response)
 }
 
 func GetVerseRange(c *fiber.Ctx) error {

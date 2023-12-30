@@ -1,8 +1,12 @@
 package models
 
+import (
+	"encoding/json"
+)
+
 type Verse struct {
 	Id            string `json:"id"`
-	Id            string `json:"-"`
+	Type          string `json:"type"`
 	BookName      string `json:"bookName,omitempty"`
 	ChapterNum    uint   `json:"chapterNum,omitempty"`
 	VerseNum      uint   `json:"verseNum,omitempty"`
@@ -11,4 +15,10 @@ type Verse struct {
 	BookId        uint   `json:"bookId,omitempty"`
 	TheographicId string `json:"-"`
 	VerseCode     uint   `json:"verseCode,omitempty"`
+}
+
+func (v Verse) MarshalJSON() ([]byte, error) {
+	type Alias Verse
+	v.Type = "verse"
+	return json.Marshal(&struct{ Alias }{Alias: (Alias)(v)})
 }
