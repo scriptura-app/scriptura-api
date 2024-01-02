@@ -13,8 +13,10 @@ func SetupRoutes(app fiber.Router) {
 
 	api.Use(m.JsonMiddleware)
 
-	api.Get("/book/:book", handler.GetBook)
-	api.Get("/book/:book/chapter/:chapter", handler.GetChapter)
-	api.Get("/book/:book/chapter/:chapter/verse/:from-:to", m.PaginationMiddleware, handler.GetVerseRange)
-	api.Get("/book/:book/chapter/:chapter/verse/:verse", handler.GetSingleVerse)
+	bible := api.Group("/bible", m.PaginationMiddleware)
+
+	bible.Get("/book/:book", handler.GetBible)
+	bible.Get("/book/:book/chapter/:chapter", handler.GetBible)
+	bible.Get("/book/:book/chapter/:chapter/verse/:start-:end", handler.GetBible)
+	bible.Get("/book/:book/chapter/:chapter/verse/:start", handler.GetBible)
 }

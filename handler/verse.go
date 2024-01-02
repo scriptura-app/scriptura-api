@@ -10,9 +10,7 @@ import (
 
 func GetSingleVerse(c *fiber.Ctx) error {
 	bk, ch, vr := c.Params("book"), c.Params("chapter"), c.Params("verse")
-
 	verse, _ := r.GetVerseByRef("en_kjv", bk, ch, vr)
-
 	response := utils.FormatResponse(verse)
 	return c.JSON(response)
 }
