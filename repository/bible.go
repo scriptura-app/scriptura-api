@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"fmt"
 	"scriptura/scriptura-api/db"
 	m "scriptura/scriptura-api/models"
 )
@@ -21,13 +20,11 @@ func GetBibleText(i BibleTextInput) ([]m.Verse, int, error) {
 	var verses []m.Verse
 	var totalItems int64
 
-	err := db.Select(&verses, "verses")
+	err := db.Select(&verses, "verses_get")
 
 	if err != nil {
 		return nil, 0, err
 	}
-
-	fmt.Println(verses)
 
 	// if i.Chapter != "" {
 	// 	query = query.Where("verse.chapter_num = ?", i.Chapter)

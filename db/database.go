@@ -11,7 +11,7 @@ import (
 
 var db *sqlx.DB
 
-//go:embed db/queries/*
+//go:embed queries/*
 var embedFiles embed.FS
 
 func Connect() error {
@@ -27,7 +27,7 @@ func Connect() error {
 }
 
 func Select(slice interface{}, queryName string) error {
-	q, err := embedFiles.ReadFile(fmt.Sprintf("db/queries/%s.sql", queryName))
+	q, err := embedFiles.ReadFile(fmt.Sprintf("queries/%s.sql", queryName))
 
 	if err != nil {
 		panic(err)

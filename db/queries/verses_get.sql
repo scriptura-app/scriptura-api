@@ -1,4 +1,3 @@
--- name: get-verse
 SELECT
 	v.id,
 	ber."text",
