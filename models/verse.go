@@ -15,6 +15,9 @@ type Verse struct {
 	BookId        uint   `json:"bookId,omitempty"`
 	TheographicId string `json:"-"`
 	VerseCode     uint   `json:"verseCode,omitempty"`
+	People        string `json:"people,omitempty"`
+	Places        string `json:"places,omitempty"`
+	Events        string `json:"events,omitempty"`
 }
 
 func (v Verse) MarshalJSON() ([]byte, error) {

@@ -17,41 +17,43 @@ type BibleTextInput struct {
 }
 
 func GetBibleText(i BibleTextInput) ([]m.Verse, int, error) {
-	db := db.DB
-	var response []m.Verse
+
+	var verses []m.Verse
 	var totalItems int64
 
-	query := db.Table("verse").
-		Select("verse.*, bible.text, book.name as book_name").
-		Joins("left join book on book.id = book_id").
-		Joins(fmt.Sprintf("left join bible_%s bible on bible.verse_id = verse.id", i.Bible)).
-		Where("book.id::varchar ilike ? OR book.code ilike ? OR book.short_name ilike ?", i.Book, i.Book, i.Book)
+	err := db.Select(&verses, "verses")
 
-	if i.Chapter != "" {
-		query = query.Where("verse.chapter_num = ?", i.Chapter)
+	if err != nil {
+		return nil, 0, err
 	}
 
-	if i.StartVerse != "" {
-		query = query.Where("verse.verse_num >= ?", i.StartVerse)
+	fmt.Println(verses)
 
-		if i.EndVerse == "" {
-			query = query.Where("verse.verse_num <= ?", i.StartVerse)
-		}
-	}
+	// if i.Chapter != "" {
+	// 	query = query.Where("verse.chapter_num = ?", i.Chapter)
+	// }
 
-	if i.EndVerse != "" {
-		query = query.Where("verse.verse_num <= ?", i.EndVerse)
-	}
+	// if i.StartVerse != "" {
+	// 	query = query.Where("verse.verse_num >= ?", i.StartVerse)
 
-	query.Count(&totalItems)
+	// 	if i.EndVerse == "" {
+	// 		query = query.Where("verse.verse_num <= ?", i.StartVerse)
+	// 	}
+	// }
 
-	query.Offset(i.Offset).
-		Limit(i.Limit).
-		Scan(&response)
+	// if i.EndVerse != "" {
+	// 	query = query.Where("verse.verse_num <= ?", i.EndVerse)
+	// }
 
-	if query.Error != nil {
-		return response, 0, query.Error
-	}
+	// query.Count(&totalItems)
 
-	return response, int(totalItems), nil
+	// query.Offset(i.Offset).
+	// 	Limit(i.Limit).
+	// 	Scan(&response)
+
+	// if query.Error != nil {
+	// 	return response, 0, query.Error
+	// }
+
+	return verses, int(totalItems), nil
 }
