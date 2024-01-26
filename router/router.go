@@ -1,6 +1,7 @@
 package router
 
 import (
+	"scriptura/scriptura-api/gql"
 	"scriptura/scriptura-api/handler"
 	m "scriptura/scriptura-api/middleware"
 
@@ -19,4 +20,6 @@ func SetupRoutes(app fiber.Router) {
 	bible.Get("/book/:book/chapter/:chapter", handler.GetBible)
 	bible.Get("/book/:book/chapter/:chapter/verse/:start-:end", handler.GetBible)
 	bible.Get("/book/:book/chapter/:chapter/verse/:start", handler.GetBible)
+
+	app.Post("/graphql", gql.Handler)
 }

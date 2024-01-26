@@ -12,6 +12,7 @@ require (
 require (
 	github.com/andybalholm/brotli v1.0.6 // indirect
 	github.com/google/uuid v1.5.0 // indirect
+	github.com/graphql-go/graphql v0.8.1 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20231201235250-de7065d80cb9 // indirect
 	github.com/jackc/pgx/v5 v5.5.1 // indirect

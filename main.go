@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"scriptura/scriptura-api/db"
+	"scriptura/scriptura-api/gql"
 	"scriptura/scriptura-api/router"
 
 	"github.com/gofiber/fiber/v2"
@@ -17,6 +18,13 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+
+	err = gql.CreateSchema()
+
+	if err != nil {
+		panic(err)
+	}
+
 	app := fiber.New()
 
 	router.SetupRoutes(app)

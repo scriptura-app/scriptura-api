@@ -14,7 +14,7 @@ func GetBible(c *fiber.Ctx) error {
 	offset, limit := c.Locals("offset").(int), c.Locals("limit").(int)
 
 	i := repository.BibleTextInput{
-		Bible:      "en_kjv",
+		Bible:      "en_kj",
 		Book:       c.Params("book"),
 		Chapter:    c.Params("chapter"),
 		StartVerse: c.Params("start"),

@@ -3,7 +3,7 @@ package repository
 import (
 	"fmt"
 	"scriptura/scriptura-api/db"
-	m "scriptura/scriptura-api/models"
+	"scriptura/scriptura-api/models"
 )
 
 type BibleTextInput struct {
@@ -16,31 +16,31 @@ type BibleTextInput struct {
 	Limit      int
 }
 
-func GetBibleText(i BibleTextInput) ([]m.Verse, int, error) {
+func GetBibleText(i BibleTextInput) ([]models.Verse, int, error) {
 	db := db.DB
-	var response []m.Verse
+	var response []models.Verse
 	var totalItems int64
 
-	query := db.Table("verse").
-		Select("verse.*, bible.text, book.name as book_name").
-		Joins("left join book on book.id = book_id").
-		Joins(fmt.Sprintf("left join bible_%s bible on bible.verse_id = verse.id", i.Bible)).
-		Where("book.id::varchar ilike ? OR book.code ilike ? OR book.short_name ilike ?", i.Book, i.Book, i.Book)
+	query := db.Table("verses v").
+		Select("v.*, bv.text, b.name as book_name").
+		Joins("left join books b on b.id = v.book_id").
+		Joins(fmt.Sprintf("left join bible_%s bv on bv.verse_id = v.id", i.Bible)).
+		Where("b.id::varchar ilike ? OR b.slug ilike ? OR b.short_name ilike ?", i.Book, i.Book, i.Book)
 
 	if i.Chapter != "" {
-		query = query.Where("verse.chapter_num = ?", i.Chapter)
+		query = query.Where("v.chapter_num = ?", i.Chapter)
 	}
 
 	if i.StartVerse != "" {
-		query = query.Where("verse.verse_num >= ?", i.StartVerse)
+		query = query.Where("v.verse_num >= ?", i.StartVerse)
 
 		if i.EndVerse == "" {
-			query = query.Where("verse.verse_num <= ?", i.StartVerse)
+			query = query.Where("v.verse_num <= ?", i.StartVerse)
 		}
 	}
 
 	if i.EndVerse != "" {
-		query = query.Where("verse.verse_num <= ?", i.EndVerse)
+		query = query.Where("v.verse_num <= ?", i.EndVerse)
 	}
 
 	query.Count(&totalItems)
