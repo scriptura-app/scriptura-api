@@ -11,15 +11,12 @@ import (
 
 var DB *gorm.DB
 
-func Connect() error {
+func Connect() {
 	var err error
-
 	DB, err = gorm.Open(postgres.Open(os.Getenv("POSTGRES_URI")), &gorm.Config{})
 	if err != nil {
 		fmt.Println("Failed to connect to the database, retrying in 5 sec...")
 		time.Sleep(5 * time.Second)
 		Connect()
 	}
-
-	return nil
 }

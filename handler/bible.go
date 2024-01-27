@@ -1,15 +1,28 @@
 package handler
 
 import (
-	m "scriptura/scriptura-api/models"
+	"scriptura/scriptura-api/models"
 	"scriptura/scriptura-api/repository"
 	"scriptura/scriptura-api/utils"
 
 	"github.com/gofiber/fiber/v2"
 )
 
+// ListAccounts lists all existing accounts
+//
+//	@Summary		Return a range of biblical
+//	@Description	get accounts
+//	@Tags			accounts
+//	@Accept			json
+//	@Produce		json
+//	@Param			q	query		string	false	"name search by q"	Format(email)
+//	@Success		200	{array}		models.Verse
+//	@Failure		400	{boolean}	bool
+//	@Failure		404	{boolean}	bool
+//	@Failure		500	{boolean}	bool
+//	@Router			/accounts [get]
 func GetBible(c *fiber.Ctx) error {
-	var verses []m.Verse
+	var verses []models.Verse
 
 	offset, limit := c.Locals("offset").(int), c.Locals("limit").(int)
 

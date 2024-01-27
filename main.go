@@ -10,17 +10,23 @@ import (
 	"github.com/joho/godotenv"
 )
 
+//	@title			Scriptura API
+//	@version		1.0
+//	@description	API for accessing Bible scriptures
+//	@termsOfService	http://scriptura.dev/terms/
+//	@contact.name	API Support
+//	@contact.url	http://scriptura.dev/support
+//	@contact.email	support@scriptura.dev
+//	@license.name	Apache 2.0
+//	@license.url	http://www.apache.org/licenses/LICENSE-2.0.html
+//	@host			scriptura.dev
+//	@BasePath		/api/v1
 func main() {
 	godotenv.Load()
 
-	err := db.Connect()
+	db.Connect()
 
-	if err != nil {
-		panic(err)
-	}
-
-	err = gql.CreateSchema()
-
+	err := gql.CreateSchema()
 	if err != nil {
 		panic(err)
 	}
