@@ -10,6 +10,8 @@ import (
 	"github.com/joho/godotenv"
 )
 
+// Scriptura
+//
 //	@title			Scriptura API
 //	@version		1.0
 //	@description	API for accessing Bible scriptures
@@ -19,7 +21,7 @@ import (
 //	@contact.email	support@scriptura.dev
 //	@license.name	Apache 2.0
 //	@license.url	http://www.apache.org/licenses/LICENSE-2.0.html
-//	@host			scriptura.dev
+//	@host			localhost:3000
 //	@BasePath		/api/v1
 func main() {
 	godotenv.Load()

@@ -1,18 +1,31 @@
 package repository
 
 import (
+	"encoding/json"
 	"scriptura/scriptura-api/db"
-	m "scriptura/scriptura-api/models"
+	"scriptura/scriptura-api/models"
 )
 
-func GetBook(book string) (m.Book, error) {
+func GetBook(input string) (models.Book, error) {
+	var err error
 	db := db.DB
-	var bookResponse m.Book
+	var book models.Book
 
-	db.Table("book").
-		Select("book.*").
-		Where("book.id::varchar ilike ? OR book.code ilike ? OR book.short_name ilike ?", book, book, book).
-		Scan(&bookResponse)
+	chapSubq := db.Table("chapters c").
+		Select("json_agg(to_json((SELECT d FROM (SELECT c.id, c.chapter_num as chapterNum) d)))").
+		Where("b.id = c.book_id")
 
-	return bookResponse, nil
+	chapCountSubq := db.Table("chapters c").Select("count(*)").Where("b.id = c.book_id")
+	verseCountSubq := db.Table("verses v").Select("count(*)").Where("b.id = v.book_id")
+
+	db.Table("books b").
+		Select("b.*, bd.name as division, t.name as testament, (?) as chapters_json, (?) as chapter_count, (?) as verse_count", chapSubq, chapCountSubq, verseCountSubq).
+		Joins("join book_divisions bd on bd.id = b.division_id").
+		Joins("join testaments t on t.id = bd.testament_id").
+		Where("b.id::varchar ilike ? OR b.slug ilike ? OR b.short_name ilike ?", input, input, input).
+		First(&book)
+
+	err = json.Unmarshal([]byte(book.ChaptersJson), &book.Chapters)
+
+	return book, err
 }
