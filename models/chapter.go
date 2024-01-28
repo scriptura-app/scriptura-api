@@ -2,11 +2,13 @@ package models
 
 import (
 	"encoding/json"
+	"scriptura/scriptura-api/utils"
 )
 
 type Chapter struct {
-	Id         string  `json:"id,omitempty"`
+	Id         int     `json:"id,omitempty"`
 	Type       string  `json:"type"`
+	Self       string  `json:"self"`
 	BookName   string  `json:"bookName,omitempty"`
 	BookId     uint    `json:"bookId,omitempty"`
 	ChapterNum uint    `json:"chapterNum,omitempty"`
@@ -15,8 +17,9 @@ type Chapter struct {
 	Verses     []Verse `json:"verses,omitempty"`
 }
 
-func (v Chapter) MarshalJSON() ([]byte, error) {
+func (c Chapter) MarshalJSON() ([]byte, error) {
 	type Alias Chapter
-	v.Type = "chapter"
-	return json.Marshal(&struct{ Alias }{Alias: (Alias)(v)})
+	c.Type = "chapter"
+	c.Self = utils.GetURI("chapter", c.Id)
+	return json.Marshal(&struct{ Alias }{Alias: (Alias)(c)})
 }
