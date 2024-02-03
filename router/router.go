@@ -21,6 +21,7 @@ func SetupRoutes(app fiber.Router) {
 	api.Use(m.JsonMiddleware)
 
 	api.Get("/book/:book", handler.GetBook)
+	api.Get("/chapter/:chapter", handler.GetChapter)
 
 	bible := api.Group("/bible", m.PaginationMiddleware)
 
