@@ -15,7 +15,7 @@ func SetupRoutes(app fiber.Router) {
 
 	app.Use(swagger.New(swagger.Config{
 		FilePath: "docs/swagger.json",
-		Path:     "docs",
+		Path:     "swagger",
 	}))
 
 	api.Use(m.JsonMiddleware)
