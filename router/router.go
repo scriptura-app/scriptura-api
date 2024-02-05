@@ -20,15 +20,17 @@ func SetupRoutes(app fiber.Router) {
 
 	api.Use(m.JsonMiddleware)
 
-	api.Get("/book/:book", handler.GetBook)
-
 	bible := api.Group("/bible", m.PaginationMiddleware)
 
-	bible.Get("/book/:book", handler.GetBible)
+	book := bible.Group("/book")
+	book.Get("/:book", handler.GetBook)
 
-	bible.Get("/book/:book/chapter/:chapter", handler.GetBible)
-	bible.Get("/book/:book/chapter/:chapter/verse/:start-:end", handler.GetBible)
-	bible.Get("/book/:book/chapter/:chapter/verse/:start", handler.GetBible)
+	chapter := book.Group("/chapter")
+	chapter.Get("/:chapter", handler.GetChapter)
+
+	verse := chapter.Group("/verse")
+	verse.Get("/:start", handler.GetSingleVerse)
+	verse.Get("/:start-:end", handler.GetVerseRange)
 
 	app.Post("/graphql", gql.Handler)
 }
