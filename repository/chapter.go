@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"scriptura/scriptura-api/db"
 	"scriptura/scriptura-api/models"
+	"strconv"
 )
 
 func GetChapter(input int) (models.Chapter, error) {
@@ -22,11 +23,10 @@ func GetChapter(input int) (models.Chapter, error) {
 
 	db.Table("chapters c").
 		Select("c.*, (?) as verses_json, (?) as verse_count, (?) as book_json", versSubq, versCountSubq, bookSubq).
-		Where("c.id::varchar ilike ?", input).
+		Where("c.id::varchar ilike ?", strconv.Itoa(input)).
 		First(&chapter)
 
 	err := json.Unmarshal([]byte(chapter.VersesJson), &chapter.Verses)
-
 	if err != nil {
 		return chapter, err
 	}

@@ -15,7 +15,7 @@ import (
 //	@Tags			Chapter
 //	@Accept			json
 //	@Produce		json
-//	@Param			id	path		int				true	"Chapter id"
+//	@Param			input	path		int	 	 true	 "Chapter id"
 //	@Success		200	{object}	models.Chapter	"Success"
 //	@Failure		400	{object}	interface{}		"Bad Request"
 //	@Failure		404	{object}	interface{}		"Not Found"
@@ -23,13 +23,11 @@ import (
 //	@Router			/chapter/{input} [get]
 func GetChapter(c *fiber.Ctx) error {
 	ch, err := strconv.Atoi(c.Params("chapter"))
-
 	if err != nil {
 		return c.Status(400).JSON("Chapter ID must be a number")
 	}
 
 	chapter, err := repository.GetChapter(ch)
-
 	if err != nil {
 		return c.Status(500).JSON("Unknown error")
 	}
