@@ -6,7 +6,7 @@ import (
 	"scriptura/scriptura-api/models"
 )
 
-func GetChapter(input string) (models.Chapter, error) {
+func GetChapter(input int) (models.Chapter, error) {
 	db := db.DB
 	var chapter models.Chapter
 
