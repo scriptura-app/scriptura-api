@@ -1,36 +1,41 @@
 package repository
 
 import (
+	"encoding/json"
 	"scriptura/scriptura-api/db"
-	m "scriptura/scriptura-api/models"
+	"scriptura/scriptura-api/models"
+	"strconv"
 )
 
-func GetChapter(book string, chapter string) (m.Chapter, error) {
+func GetChapter(input int) (models.Chapter, error) {
 	db := db.DB
-	var chapterResponse m.Chapter
+	var chapter models.Chapter
 
-	query := db.Table("verse").
-		Select("count(*) as verse_count, book.name as book_name, book_id, chapter_num, array_agg(year_written) as year_range").
-		Joins("left join book on book.id = book_id").
-		Where("book.id::varchar ilike ? OR book.code ilike ? OR book.short_name ilike ?", book, book, book).
-		Where("verse.chapter_num = ?", chapter).
-		Group("verse, book.name, book_id, chapter_num").
-		Scan(&chapterResponse)
+	versSubq := db.Table("verses v").
+		Select("json_agg(to_json((SELECT ve FROM (SELECT v.id, v.verse_num as verseNum) ve)))").
+		Where("c.id = v.chapter_id")
 
-	if query.Error != nil {
-		return chapterResponse, query.Error
+	bookSubq := db.Table("books b").
+		Select("to_json((SELECT bk FROM (SELECT b.id, b.slug) bk))").
+		Where("b.id = c.book_id")
+
+	versCountSubq := db.Table("verses v").Select("count(*)").Where("c.id = v.chapter_id")
+
+	db.Table("chapters c").
+		Select("c.*, (?) as verses_json, (?) as verse_count, (?) as book_json", versSubq, versCountSubq, bookSubq).
+		Where("c.id::varchar ilike ?", strconv.Itoa(input)).
+		First(&chapter)
+
+	err := json.Unmarshal([]byte(chapter.VersesJson), &chapter.Verses)
+	if err != nil {
+		return chapter, err
 	}
 
-	verseQuery := db.Table("verse").
-		Select("verse.id, verse.verse_num").
-		Joins("left join book on book.id = book_id").
-		Where("book.id::varchar ilike ? OR book.code ilike ? OR book.short_name ilike ?", book, book, book).
-		Where("verse.chapter_num = ?", chapter).
-		Scan(&chapterResponse.Verses)
+	err2 := json.Unmarshal([]byte(chapter.BookJson), &chapter.Book)
 
-	if verseQuery.Error != nil {
-		return chapterResponse, verseQuery.Error
+	if err2 != nil {
+		return chapter, err2
 	}
 
-	return chapterResponse, nil
+	return chapter, nil
 }
