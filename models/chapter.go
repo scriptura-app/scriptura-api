@@ -6,15 +6,19 @@ import (
 )
 
 type Chapter struct {
-	Id         int     `json:"id,omitempty"`
-	Type       string  `json:"type"`
-	Self       string  `json:"self"`
-	BookName   string  `json:"bookName,omitempty"`
-	BookId     uint    `json:"bookId,omitempty"`
+	Id   int    `json:"id,omitempty"`
+	Type string `json:"type"`
+	Self string `json:"self"`
+	// BookName   string  `json:"bookName,omitempty"`
+	// BookId     uint    `json:"bookId,omitempty"`
 	ChapterNum uint    `json:"chapterNum,omitempty"`
 	VerseCount int     `json:"verseCount,omitempty"`
 	YearRange  []int   `json:"yearWrittenRange,omitempty"`
+	Book       Book    `json:"book"`
 	Verses     []Verse `json:"verses,omitempty"`
+
+	VersesJson string `json:"-"`
+	BookJson   string `json:"-"`
 }
 
 func (c Chapter) MarshalJSON() ([]byte, error) {

@@ -18,7 +18,7 @@ type Book struct {
 
 	ChapterCount int       `json:"chapterCount,omitempty"`
 	VerseCount   int       `json:"verseCount,omitempty"`
-	Chapters     []Chapter `json:"chapters"`
+	Chapters     []Chapter `json:"chapters,omitempty"`
 
 	ChaptersJson string `json:"-"`
 }
