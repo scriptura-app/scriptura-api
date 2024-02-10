@@ -1,15 +1,27 @@
 package router
 
 import (
-	"scriptura/scriptura-api/gql"
 	"scriptura/scriptura-api/handler"
-	m "scriptura/scriptura-api/middleware"
+	"scriptura/scriptura-api/repository"
 
-	"github.com/gofiber/contrib/swagger"
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/logger"
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 )
 
+func NewRouter() *chi.Mux {
+	r := chi.NewRouter()
+	r.Use(middleware.Logger)
+
+	bookRepository := repository.NewBookRepository()
+	bookHandler := handler.NewBookHandler(bookRepository)
+
+	r.Get("/book/{book}", bookHandler.GetBook)
+
+	return r
+}
+
+//OLD------------V
+/*
 func SetupRoutes(app fiber.Router) {
 	api := app.Group("/api/v1", logger.New())
 
@@ -33,3 +45,4 @@ func SetupRoutes(app fiber.Router) {
 
 	app.Post("/graphql", gql.Handler)
 }
+*/

@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"encoding/json"
 	"os"
 	"strconv"
 )
@@ -24,10 +25,11 @@ type SingleResponse struct {
 	Response
 }
 
-func FormatResponse(resource interface{}) SingleResponse {
+func FormatResponse(resource interface{}) []byte {
 	var response SingleResponse
 	response.Data = resource
-	return response
+	out, _ := json.Marshal(response)
+	return out
 }
 
 func FormatPaginationResponse(resources interface{}, totalItems int, offset int, limit int) (SliceResponse, error) {
