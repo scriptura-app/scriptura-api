@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"scriptura/scriptura-api/db"
-	"scriptura/scriptura-api/gql"
 	"scriptura/scriptura-api/router"
 
 	"github.com/joho/godotenv"
@@ -28,11 +27,6 @@ func main() {
 	db.Connect()
 
 	r := router.NewRouter()
-
-	err := gql.CreateSchema()
-	if err != nil {
-		panic(err)
-	}
 
 	fmt.Println("Scriptura 📜 is up on port 3000")
 	panic(http.ListenAndServe(":3000", r))
