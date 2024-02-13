@@ -1,15 +1,12 @@
 package router
 
 import (
-	"scriptura/scriptura-api/graph"
+	"scriptura/scriptura-api/graphql"
 	"scriptura/scriptura-api/handler"
 	"scriptura/scriptura-api/repository"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-
-	gqlHandler "github.com/99designs/gqlgen/graphql/handler"
-	"github.com/99designs/gqlgen/graphql/playground"
 )
 
 func NewRouter() *chi.Mux {
@@ -21,10 +18,10 @@ func NewRouter() *chi.Mux {
 
 	r.Get("/book/{book}", bookHandler.GetBook)
 
-	srv := gqlHandler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: &graph.Resolver{}}))
+	gqlServer, gqlPlayground := graphql.NewServer(bookRepository)
 
-	r.Handle("/playground", playground.Handler("GraphQL playground", "/graphql"))
-	r.Handle("/graphql", srv)
+	r.Handle("/graphql", gqlServer)
+	r.Handle("/playground", gqlPlayground)
 
 	return r
 }

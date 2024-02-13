@@ -1,11 +1,11 @@
 # Where are all the schema files located? globs are supported eg  src/**/*.graphqls
 schema:
-  - graph/*.graphqls
+  - graphql/schema/*.graphql
 
 # Where should the generated server code go?
 exec:
-  filename: graph/generated.go
-  package: graph
+  filename: graphql/.generated/generated.go
+  package: graphql
 
 # Uncomment to enable federation
 # federation:
@@ -14,15 +14,15 @@ exec:
 
 # Where should any generated models go?
 model:
-  filename: graph/model/models_gen.go
-  package: model
+  filename: graphql/.generated/models_gen.go
+  package: graphql
 
 # Where should the resolver implementations go?
 resolver:
   layout: follow-schema
-  dir: graph
-  package: graph
-  filename_template: "{name}.resolvers.go"
+  dir: graphql/resolver
+  package: graphql
+  filename_template: "{name}.resolver.go"
   # Optional: turn on to not generate template comments above resolvers
   # omit_template_comment: false
 
@@ -67,21 +67,22 @@ resolver:
 # if they match it will use them, otherwise it will generate them.
 autobind:
   - "scriptura/scriptura-api/models"
-
 # This section declares type mapping between the GraphQL and go type systems
 #
 # The first line in each type will be used as defaults for resolver arguments and
 # modelgen, the others will be allowed when binding to fields. Configure them to
 # your liking
-models:
-  ID:
-    model:
-      - github.com/99designs/gqlgen/graphql.ID
-      - github.com/99designs/gqlgen/graphql.Int
-      - github.com/99designs/gqlgen/graphql.Int64
-      - github.com/99designs/gqlgen/graphql.Int32
-  Int:
-    model:
-      - github.com/99designs/gqlgen/graphql.Int
-      - github.com/99designs/gqlgen/graphql.Int64
-      - github.com/99designs/gqlgen/graphql.Int32
+# models:
+#   ID:
+#     model:
+#       - github.com/99designs/gqlgen/graphql.ID
+#       - github.com/99designs/gqlgen/graphql.Int
+#       - github.com/99designs/gqlgen/graphql.Int64
+#       - github.com/99designs/gqlgen/graphql.Int32
+#   Int:
+#     model:
+#       - github.com/99designs/gqlgen/graphql.Int
+#       - github.com/99designs/gqlgen/graphql.Int64
+#       - github.com/99designs/gqlgen/graphql.Int32
+#   Book:
+#     model: scriptura/scriptura-api/models.Book
