@@ -1,6 +1,7 @@
 package router
 
 import (
+	"scriptura/scriptura-api/graphql"
 	"scriptura/scriptura-api/handler"
 	"scriptura/scriptura-api/repository"
 
@@ -16,6 +17,11 @@ func NewRouter() *chi.Mux {
 	bookHandler := handler.NewBookHandler(bookRepository)
 
 	r.Get("/book/{book}", bookHandler.GetBook)
+
+	gqlServer, gqlPlayground := graphql.NewServer(bookRepository)
+
+	r.Handle("/graphql", gqlServer)
+	r.Handle("/playground", gqlPlayground)
 
 	return r
 }
