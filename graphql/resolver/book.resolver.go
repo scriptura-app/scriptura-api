@@ -13,7 +13,7 @@ import (
 
 // Book is the resolver for the book field.
 func (r *queryResolver) Book(ctx context.Context, input gql.BookInput) (*models.Book, error) {
-	book, err := r.BookRepository.GetBook(input.ID)
+	book, err := r.AppRepository.BookRepository.GetBook(input.ID)
 	if book.Id == 0 {
 		return nil, errors.New("book not found")
 	}

@@ -11,9 +11,9 @@ import (
 )
 
 // temp
-func NewServer(bookRepository repository.BookRepository) (*handler.Server, http.HandlerFunc) {
+func NewServer(appRepo *repository.AppRepository) (*handler.Server, http.HandlerFunc) {
 	resolver := &resolver.Resolver{
-		BookRepository: bookRepository,
+		AppRepository: appRepo,
 	}
 	server := handler.NewDefaultServer(gql.NewExecutableSchema(gql.Config{Resolvers: resolver}))
 	playground := playground.Handler("GraphQL playground", "/graphql")

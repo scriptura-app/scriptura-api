@@ -2,7 +2,6 @@ package repository
 
 import (
 	"encoding/json"
-	"scriptura/scriptura-api/db"
 	"scriptura/scriptura-api/models"
 
 	"gorm.io/gorm"
@@ -13,13 +12,12 @@ type BookRepository interface {
 }
 
 type bookRepository struct {
-	db *gorm.DB
+	db      *gorm.DB
+	appRepo *AppRepository
 }
 
-func NewBookRepository() BookRepository {
-	return &bookRepository{
-		db: db.DB,
-	}
+func NewBookRepository(db *gorm.DB, appRepo *AppRepository) BookRepository {
+	return &bookRepository{db: db, appRepo: appRepo}
 }
 
 func (r *bookRepository) GetBook(input string) (models.Book, error) {

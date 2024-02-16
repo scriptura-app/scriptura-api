@@ -1,29 +1,27 @@
 package router
 
 import (
+	"net/http"
+
 	"scriptura/scriptura-api/graphql"
 	"scriptura/scriptura-api/handler"
 	"scriptura/scriptura-api/repository"
-
-	"github.com/go-chi/chi/v5"
-	"github.com/go-chi/chi/v5/middleware"
 )
 
-func NewRouter() *chi.Mux {
-	r := chi.NewRouter()
-	r.Use(middleware.Logger)
+func NewAppRouter(repo *repository.AppRepository, handlers *handler.AppHandlers) *http.ServeMux {
+	mainMux := http.NewServeMux()
+	apiMux := http.NewServeMux()
 
-	bookRepository := repository.NewBookRepository()
-	bookHandler := handler.NewBookHandler(bookRepository)
+	mainMux.Handle("/api/v1", apiMux)
 
-	r.Get("/book/{book}", bookHandler.GetBook)
+	apiMux.HandleFunc("/book/{book}", handlers.BookHandler.GetBook)
 
-	gqlServer, gqlPlayground := graphql.NewServer(bookRepository)
+	gqlServer, gqlPlayground := graphql.NewServer(repo)
 
-	r.Handle("/graphql", gqlServer)
-	r.Handle("/playground", gqlPlayground)
+	mainMux.Handle("/graphql", gqlServer)
+	mainMux.Handle("/playground", gqlPlayground)
 
-	return r
+	return mainMux
 }
 
 //OLD------------V

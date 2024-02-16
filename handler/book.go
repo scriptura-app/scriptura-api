@@ -16,10 +16,8 @@ type bookHandler struct {
 	repository repository.BookRepository
 }
 
-func NewBookHandler(r repository.BookRepository) BookHandler {
-	return &bookHandler{
-		repository: r,
-	}
+func NewBookHandler(repo repository.BookRepository) BookHandler {
+	return &bookHandler{repository: repo}
 }
 
 // GetBook

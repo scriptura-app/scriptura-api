@@ -7,5 +7,5 @@ import "scriptura/scriptura-api/repository"
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 type Resolver struct {
-	BookRepository repository.BookRepository
+	AppRepository *repository.AppRepository
 }
