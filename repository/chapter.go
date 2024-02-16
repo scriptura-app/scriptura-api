@@ -2,13 +2,26 @@ package repository
 
 import (
 	"encoding/json"
-	"scriptura/scriptura-api/db"
 	"scriptura/scriptura-api/models"
-	"strconv"
+
+	"gorm.io/gorm"
 )
 
-func GetChapter(input int) (models.Chapter, error) {
-	db := db.DB
+type ChapterRepository interface {
+	GetById(input int) (models.Chapter, error)
+}
+
+type chapterRepository struct {
+	db      *gorm.DB
+	appRepo *AppRepository
+}
+
+func NewChapterRepository(db *gorm.DB, appRepo *AppRepository) ChapterRepository {
+	return &chapterRepository{db: db, appRepo: appRepo}
+}
+
+func (r *chapterRepository) GetById(id int) (models.Chapter, error) {
+	db := r.db
 	var chapter models.Chapter
 
 	versSubq := db.Table("verses v").
@@ -23,7 +36,7 @@ func GetChapter(input int) (models.Chapter, error) {
 
 	db.Table("chapters c").
 		Select("c.*, (?) as verses_json, (?) as verse_count, (?) as book_json", versSubq, versCountSubq, bookSubq).
-		Where("c.id::varchar ilike ?", strconv.Itoa(input)).
+		Where("c.id::varchar ilike ?", id).
 		First(&chapter)
 
 	err := json.Unmarshal([]byte(chapter.VersesJson), &chapter.Verses)

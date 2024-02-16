@@ -5,12 +5,17 @@ import (
 )
 
 type AppRepository struct {
-	BookRepository BookRepository
+	Book    BookRepository
+	Verse   VerseRepository
+	Chapter ChapterRepository
+	Bible   BibleRepository
 }
 
 func NewAppRepository(db *gorm.DB) AppRepository {
 	var r AppRepository
-	r.BookRepository = NewBookRepository(db, &r)
-
+	r.Book = NewBookRepository(db, &r)
+	r.Verse = NewVerseRepository(db, &r)
+	r.Chapter = NewChapterRepository(db, &r)
+	r.Bible = NewBibleRepository(db, &r)
 	return r
 }
