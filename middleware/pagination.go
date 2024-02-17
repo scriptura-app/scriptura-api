@@ -1,35 +1,29 @@
 package middleware
 
-import (
-	"strconv"
+// func PaginationMiddleware(c *fiber.Ctx) error {
+// 	var err error
 
-	"github.com/gofiber/fiber/v2"
-)
+// 	offset := 0∫
+// 	limit := 10
 
-func PaginationMiddleware(c *fiber.Ctx) error {
-	var err error
+// 	q := c.Queries()
 
-	offset := 0
-	limit := 10
+// 	if len(q["page[offset]"]) > 0 {
+// 		offset, err = strconv.Atoi(q["page[offset]"])
+// 		if err != nil {
+// 			return c.Status(400).JSON("Bad pagination")
+// 		∫}
+// 	}
 
-	q := c.Queries()
+// 	if len(q["page[limit]"]) > 0 {
+// 		limit, err = strconv.Atoi(q["page[limit]"])
+// 		if err != nil {
+// 			return c.Status(400).JSON("Bad pagination")
+// 		}
+// 	}
 
-	if len(q["page[offset]"]) > 0 {
-		offset, err = strconv.Atoi(q["page[offset]"])
-		if err != nil {
-			return c.Status(400).JSON("Bad pagination")
-		}
-	}
+// 	c.Locals("offset", offset)
+// 	c.Locals("limit", limit)
 
-	if len(q["page[limit]"]) > 0 {
-		limit, err = strconv.Atoi(q["page[limit]"])
-		if err != nil {
-			return c.Status(400).JSON("Bad pagination")
-		}
-	}
-
-	c.Locals("offset", offset)
-	c.Locals("limit", limit)
-
-	return c.Next()
-}
+// 	return c.Next()
+// }
