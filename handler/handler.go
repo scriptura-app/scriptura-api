@@ -5,12 +5,18 @@ import (
 )
 
 type AppHandlers struct {
-	BookHandler BookHandler
+	Book    BookHandler
+	Chapter ChapterHandler
+	Bible   BibleHandler
+	Verse   VerseHandler
 }
 
 func NewAppHandlers(repo repository.AppRepository) AppHandlers {
 	h := AppHandlers{
-		BookHandler: NewBookHandler(repo.BookRepository),
+		Book:    NewBookHandler(repo.Book),
+		Chapter: NewChapterHandler(repo.Chapter),
+		Verse:   NewVerseHandler(repo.Verse),
+		Bible:   NewBibleHandler(repo.Bible),
 	}
 
 	return h

@@ -4,12 +4,10 @@ import (
 	"net/http"
 	"scriptura/scriptura-api/repository"
 	"scriptura/scriptura-api/utils"
-
-	"github.com/go-chi/chi/v5"
 )
 
 type BookHandler interface {
-	GetBook(w http.ResponseWriter, r *http.Request)
+	GetById(w http.ResponseWriter, r *http.Request)
 }
 
 type bookHandler struct {
@@ -33,9 +31,9 @@ func NewBookHandler(repo repository.BookRepository) BookHandler {
 //	@Failure		404		{object}	interface{}	"Not Found"
 //	@Failure		500		{object}	interface{}	"Internal Server Error"
 //	@Router			/book/{input} [get]
-func (h *bookHandler) GetBook(w http.ResponseWriter, r *http.Request) {
-	bookInput := chi.URLParam(r, "book")
-	book, _ := h.repository.GetBook(bookInput)
+func (h *bookHandler) GetById(w http.ResponseWriter, r *http.Request) {
+	bookId := r.PathValue("id")
+	book, _ := h.repository.GetById(bookId)
 
 	//TODO
 	//if book.Id == 0 {

@@ -12,9 +12,11 @@ func NewAppRouter(repo *repository.AppRepository, handlers *handler.AppHandlers)
 	mainMux := http.NewServeMux()
 	apiMux := http.NewServeMux()
 
-	mainMux.Handle("/api/v1", apiMux)
+	mainMux.Handle("GET /api/v1", apiMux)
 
-	apiMux.HandleFunc("/book/{book}", handlers.BookHandler.GetBook)
+	apiMux.HandleFunc("/book/{id}", handlers.Book.GetById)
+	apiMux.HandleFunc("/chapter/{id}", handlers.Chapter.GetById)
+	apiMux.HandleFunc("/verse/{id}", handlers.Verse.GetById)
 
 	gqlServer, gqlPlayground := graphql.NewServer(repo)
 

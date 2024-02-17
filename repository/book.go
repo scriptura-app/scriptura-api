@@ -8,7 +8,7 @@ import (
 )
 
 type BookRepository interface {
-	GetBook(input string) (models.Book, error)
+	GetById(input string) (models.Book, error)
 }
 
 type bookRepository struct {
@@ -20,7 +20,7 @@ func NewBookRepository(db *gorm.DB, appRepo *AppRepository) BookRepository {
 	return &bookRepository{db: db, appRepo: appRepo}
 }
 
-func (r *bookRepository) GetBook(input string) (models.Book, error) {
+func (r *bookRepository) GetById(input string) (models.Book, error) {
 	var err error
 	db := r.db
 	var book models.Book

@@ -32,17 +32,15 @@ func FormatResponse(resource interface{}) []byte {
 	return out
 }
 
-func FormatPaginationResponse(resources interface{}, totalItems int, offset int, limit int) (SliceResponse, error) {
+func FormatPaginationResponse(resources interface{}, totalItems int, offset int, limit int) []byte {
 	var response SliceResponse
-	var err error
-
 	response.Data = resources
 	response.Pagination.CurrentPage = offset/limit + 1
 	response.Pagination.TotalItems = totalItems
 	response.Pagination.PageSize = limit
 	response.Pagination.TotalPages = (totalItems + limit - 1) / limit
-
-	return response, err
+	out, _ := json.Marshal(response)
+	return out
 }
 
 func GetURI(entity string, id int) string {

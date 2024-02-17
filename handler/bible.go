@@ -1,12 +1,23 @@
 package handler
 
 import (
+	"net/http"
 	"scriptura/scriptura-api/models"
 	"scriptura/scriptura-api/repository"
 	"scriptura/scriptura-api/utils"
-
-	"github.com/gofiber/fiber/v2"
 )
+
+type BibleHandler interface {
+	GetByRef(w http.ResponseWriter, r *http.Request)
+}
+
+type bibleHandler struct {
+	repository repository.BibleRepository
+}
+
+func NewBibleHandler(repo repository.BibleRepository) BibleHandler {
+	return &bibleHandler{repository: repo}
+}
 
 // ListAccounts lists all existing accounts
 //
@@ -21,24 +32,23 @@ import (
 //	@Failure		404	{boolean}	bool
 //	@Failure		500	{boolean}	bool
 //	@Router			/accounts [get]
-func GetBible(c *fiber.Ctx) error {
+func (h *bibleHandler) GetByRef(w http.ResponseWriter, r *http.Request) {
 	var verses []models.Verse
 
-	offset, limit := c.Locals("offset").(int), c.Locals("limit").(int)
+	// offset, limit := c.Locals("offset").(int), c.Locals("limit").(int)
 
 	i := repository.BibleTextInput{
 		Bible:      "en_kj",
-		Book:       c.Params("book"),
-		Chapter:    c.Params("chapter"),
-		StartVerse: c.Params("start"),
-		EndVerse:   c.Params("end"),
-		Offset:     c.Locals("offset").(int),
-		Limit:      c.Locals("limit").(int),
+		Book:       r.PathValue("book"),
+		Chapter:    r.PathValue("chapter"),
+		StartVerse: r.PathValue("start"),
+		EndVerse:   r.PathValue("end"),
+		// Offset:     c.Locals("offset").(int),
+		// Limit:      c.Locals("limit").(int),
 	}
 
-	verses, totalItems, _ := repository.GetBibleText(i)
+	verses, totalItems, _ := h.repository.GetBibleText(i)
 
-	response, _ := utils.FormatPaginationResponse(verses, totalItems, offset, limit)
-
-	return c.JSON(response)
+	response := utils.FormatPaginationResponse(verses, totalItems, 0, 0)
+	w.Write(response)
 }
