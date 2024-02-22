@@ -12,12 +12,11 @@ type ChapterRepository interface {
 }
 
 type chapterRepository struct {
-	db      *gorm.DB
-	appRepo *AppRepository
+	db *gorm.DB
 }
 
-func NewChapterRepository(db *gorm.DB, appRepo *AppRepository) ChapterRepository {
-	return &chapterRepository{db: db, appRepo: appRepo}
+func NewChapterRepository(db *gorm.DB) ChapterRepository {
+	return &chapterRepository{db: db}
 }
 
 func (r *chapterRepository) GetById(id int) (models.Chapter, error) {

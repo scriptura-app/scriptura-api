@@ -13,9 +13,9 @@ type AppRepository struct {
 
 func NewAppRepository(db *gorm.DB) AppRepository {
 	var r AppRepository
-	r.Book = NewBookRepository(db, &r)
-	r.Verse = NewVerseRepository(db, &r)
-	r.Chapter = NewChapterRepository(db, &r)
-	r.Bible = NewBibleRepository(db, &r)
+	r.Book = NewBookRepository(db)
+	r.Verse = NewVerseRepository(db)
+	r.Chapter = NewChapterRepository(db)
+	r.Bible = NewBibleRepository(db)
 	return r
 }

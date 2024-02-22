@@ -16,8 +16,8 @@ type verseRepository struct {
 	appRepo *AppRepository
 }
 
-func NewVerseRepository(db *gorm.DB, appRepo *AppRepository) VerseRepository {
-	return &verseRepository{db: db, appRepo: appRepo}
+func NewVerseRepository(db *gorm.DB) VerseRepository {
+	return &verseRepository{db: db}
 }
 
 func (r *verseRepository) GetById(id int) (models.Verse, error) {

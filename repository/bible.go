@@ -12,12 +12,11 @@ type BibleRepository interface {
 }
 
 type bibleRepository struct {
-	db      *gorm.DB
-	appRepo *AppRepository
+	db *gorm.DB
 }
 
-func NewBibleRepository(db *gorm.DB, appRepo *AppRepository) BibleRepository {
-	return &bibleRepository{db: db, appRepo: appRepo}
+func NewBibleRepository(db *gorm.DB) BibleRepository {
+	return &bibleRepository{db: db}
 }
 
 type BibleTextInput struct {
