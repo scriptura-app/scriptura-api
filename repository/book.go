@@ -12,12 +12,11 @@ type BookRepository interface {
 }
 
 type bookRepository struct {
-	db      *gorm.DB
-	appRepo *AppRepository
+	db *gorm.DB
 }
 
-func NewBookRepository(db *gorm.DB, appRepo *AppRepository) BookRepository {
-	return &bookRepository{db: db, appRepo: appRepo}
+func NewBookRepository(db *gorm.DB) BookRepository {
+	return &bookRepository{db: db}
 }
 
 func (r *bookRepository) GetById(input string) (models.Book, error) {
