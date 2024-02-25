@@ -1,5 +1,5 @@
 input BookInput {
-  id: ID!
+  id: ID
   slug: String
 }
 
