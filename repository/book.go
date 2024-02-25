@@ -2,16 +2,29 @@ package repository
 
 import (
 	"encoding/json"
-	"scriptura/scriptura-api/db"
 	"scriptura/scriptura-api/models"
+
+	"gorm.io/gorm"
 )
 
-func GetBook(input string) (models.Book, error) {
+type BookRepository interface {
+	GetById(input string) (models.Book, error)
+}
+
+type bookRepository struct {
+	db *gorm.DB
+}
+
+func NewBookRepository(db *gorm.DB) BookRepository {
+	return &bookRepository{db: db}
+}
+
+func (r *bookRepository) GetById(input string) (models.Book, error) {
 	var err error
-	db := db.DB
+	db := r.db
 	var book models.Book
 
-	chapSubq := db.Table("chapters c").
+	chapSubq := r.db.Table("chapters c").
 		Select("json_agg(to_json((SELECT d FROM (SELECT c.id, c.chapter_num as chapterNum) d)))").
 		Where("b.id = c.book_id")
 

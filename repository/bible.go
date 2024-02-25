@@ -2,9 +2,22 @@ package repository
 
 import (
 	"fmt"
-	"scriptura/scriptura-api/db"
 	"scriptura/scriptura-api/models"
+
+	"gorm.io/gorm"
 )
+
+type BibleRepository interface {
+	GetBibleText(i BibleTextInput) ([]models.Verse, int, error)
+}
+
+type bibleRepository struct {
+	db *gorm.DB
+}
+
+func NewBibleRepository(db *gorm.DB) BibleRepository {
+	return &bibleRepository{db: db}
+}
 
 type BibleTextInput struct {
 	Bible      string
@@ -16,8 +29,8 @@ type BibleTextInput struct {
 	Limit      int
 }
 
-func GetBibleText(i BibleTextInput) ([]models.Verse, int, error) {
-	db := db.DB
+func (r *bibleRepository) GetBibleText(i BibleTextInput) ([]models.Verse, int, error) {
+	db := r.db
 	var response []models.Verse
 	var totalItems int64
 

@@ -1,0 +1,19 @@
+type Query {
+  book(input: BookInput!): Book!
+}
+
+input BookInput {
+  id: ID!
+  slug: String
+}
+
+type Book {
+  id: ID!
+  name: String
+  slug: String
+  testament: String
+  division: String
+  shortName: String
+  chapterCount: Int
+  verseCount: Int
+}

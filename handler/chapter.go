@@ -1,12 +1,23 @@
 package handler
 
 import (
+	"net/http"
 	"scriptura/scriptura-api/repository"
 	"scriptura/scriptura-api/utils"
 	"strconv"
-
-	"github.com/gofiber/fiber/v2"
 )
+
+type ChapterHandler interface {
+	GetById(w http.ResponseWriter, r *http.Request)
+}
+
+type chapterHandler struct {
+	repository repository.ChapterRepository
+}
+
+func NewChapterHandler(repo repository.ChapterRepository) ChapterHandler {
+	return &chapterHandler{repository: repo}
+}
 
 // GetChapter
 //
@@ -21,21 +32,25 @@ import (
 //	@Failure		404	{object}	interface{}		"Not Found"
 //	@Failure		500	{object}	interface{}		"Internal Server Error"
 //	@Router			/chapter/{input} [get]
-func GetChapter(c *fiber.Ctx) error {
-	ch, err := strconv.Atoi(c.Params("chapter"))
+func (h *chapterHandler) GetById(w http.ResponseWriter, r *http.Request) {
+	chapterId := r.PathValue("id")
+	id, err := strconv.Atoi(chapterId)
 	if err != nil {
-		return c.Status(400).JSON("Chapter ID must be a number")
+		http.Error(w, "Chapter ID must be a number", http.StatusBadRequest)
+		return
 	}
 
-	chapter, err := repository.GetChapter(ch)
+	chapter, err := h.repository.GetById(id)
 	if err != nil {
-		return c.Status(500).JSON("Unknown error")
+		http.Error(w, "Unknown error", http.StatusInternalServerError)
+		return
 	}
 
 	if chapter.Id == 0 {
-		return c.Status(404).JSON("Book not found")
+		http.Error(w, "Chapter not found", http.StatusNotFound)
+		return
 	}
 
 	response := utils.FormatResponse(chapter)
-	return c.JSON(response)
+	w.Write(response)
 }

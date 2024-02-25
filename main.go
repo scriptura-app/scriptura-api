@@ -1,12 +1,13 @@
 package main
 
 import (
-	"log"
+	"fmt"
+	"net/http"
 	"scriptura/scriptura-api/db"
-	"scriptura/scriptura-api/gql"
+	"scriptura/scriptura-api/handler"
+	"scriptura/scriptura-api/repository"
 	"scriptura/scriptura-api/router"
 
-	"github.com/gofiber/fiber/v2"
 	"github.com/joho/godotenv"
 )
 
@@ -25,16 +26,12 @@ import (
 //	@BasePath		/api/v1
 func main() {
 	godotenv.Load()
+	db, _ := db.CreateDBConnection(10)
 
-	db.Connect()
+	repo := repository.NewAppRepository(db)
+	handler := handler.NewAppHandlers(repo)
+	r := router.NewAppRouter(&repo, &handler)
 
-	err := gql.CreateSchema()
-	if err != nil {
-		panic(err)
-	}
-
-	app := fiber.New()
-
-	router.SetupRoutes(app)
-	log.Fatal(app.Listen(":3000"))
+	fmt.Println("Scriptura 📜 is up on port 3000")
+	panic(http.ListenAndServe(":3000", r))
 }

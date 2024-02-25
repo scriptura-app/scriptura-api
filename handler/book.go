@@ -1,11 +1,22 @@
 package handler
 
 import (
-	r "scriptura/scriptura-api/repository"
+	"net/http"
+	"scriptura/scriptura-api/repository"
 	"scriptura/scriptura-api/utils"
-
-	"github.com/gofiber/fiber/v2"
 )
+
+type BookHandler interface {
+	GetById(w http.ResponseWriter, r *http.Request)
+}
+
+type bookHandler struct {
+	repository repository.BookRepository
+}
+
+func NewBookHandler(repo repository.BookRepository) BookHandler {
+	return &bookHandler{repository: repo}
+}
 
 // GetBook
 //
@@ -20,13 +31,15 @@ import (
 //	@Failure		404		{object}	interface{}	"Not Found"
 //	@Failure		500		{object}	interface{}	"Internal Server Error"
 //	@Router			/book/{input} [get]
-func GetBook(c *fiber.Ctx) error {
-	bk := c.Params("book")
-	book, _ := r.GetBook(bk)
+func (h *bookHandler) GetById(w http.ResponseWriter, r *http.Request) {
+	bookId := r.PathValue("id")
+	book, _ := h.repository.GetById(bookId)
 
-	if book.Id == 0 {
-		return c.Status(404).JSON("Book not found")
-	}
+	//TODO
+	//if book.Id == 0 {
+	//	return c.Status(404).JSON("Book not found")
+	//}
+
 	response := utils.FormatResponse(book)
-	return c.JSON(response)
+	w.Write(response)
 }

@@ -1,35 +1,27 @@
 package router
 
 import (
-	"scriptura/scriptura-api/gql"
-	"scriptura/scriptura-api/handler"
-	m "scriptura/scriptura-api/middleware"
+	"net/http"
 
-	"github.com/gofiber/contrib/swagger"
-	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/logger"
+	"scriptura/scriptura-api/graphql"
+	"scriptura/scriptura-api/handler"
+	"scriptura/scriptura-api/repository"
 )
 
-func SetupRoutes(app fiber.Router) {
-	api := app.Group("/api/v1", logger.New())
+func NewAppRouter(repo *repository.AppRepository, handlers *handler.AppHandlers) *http.ServeMux {
+	mainMux := http.NewServeMux()
+	apiMux := http.NewServeMux()
 
-	app.Use(swagger.New(swagger.Config{
-		FilePath: "docs/swagger.json",
-		Path:     "swagger",
-	}))
+	mainMux.Handle("GET /api/v1", apiMux)
 
-	api.Use(m.JsonMiddleware)
+	apiMux.HandleFunc("/book/{id}", handlers.Book.GetById)
+	apiMux.HandleFunc("/chapter/{id}", handlers.Chapter.GetById)
+	apiMux.HandleFunc("/verse/{id}", handlers.Verse.GetById)
 
-	api.Get("/book/:book", handler.GetBook)
-	api.Get("/chapter/:chapter", handler.GetChapter)
+	gqlServer, gqlPlayground := graphql.NewServer(repo)
 
-	bible := api.Group("/bible", m.PaginationMiddleware)
+	mainMux.Handle("/graphql", gqlServer)
+	mainMux.Handle("/playground", gqlPlayground)
 
-	bible.Get("/book/:book", handler.GetBible)
-
-	bible.Get("/book/:book/chapter/:chapter", handler.GetBible)
-	bible.Get("/book/:book/chapter/:chapter/verse/:start-:end", handler.GetBible)
-	bible.Get("/book/:book/chapter/:chapter/verse/:start", handler.GetBible)
-
-	app.Post("/graphql", gql.Handler)
+	return mainMux
 }
