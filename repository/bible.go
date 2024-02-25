@@ -37,6 +37,7 @@ func (r *bibleRepository) GetBibleText(i BibleTextInput) ([]models.Verse, int, e
 
 	query := db.Table("verses v").
 		Select("v.*, bv.text").
+		Joins("left join books b on b.id = v.book_id").
 		Joins(fmt.Sprintf("left join bible_%s bv on bv.verse_id = v.id", i.Version))
 
 	if i.Cursor != 0 {

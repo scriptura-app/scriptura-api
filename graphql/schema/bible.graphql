@@ -1,0 +1,22 @@
+input BibleInput {
+  version: String = "en_kj"
+  book: String = ""
+  chapter: Int = 0
+  startVerse: Int = 0
+  endVerse: Int = 0
+  cursor: Int = 0
+  offset: Int = 0
+  limit: Int = 10
+}
+
+type Verse {
+  id: ID!
+  bookId: Int
+  chapterNum: Int
+  verseNum: Int
+  text: String
+}
+
+extend type Query {
+  bible(input: BibleInput!): [Verse]!
+}

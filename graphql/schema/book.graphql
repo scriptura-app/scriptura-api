@@ -1,7 +1,3 @@
-type Query {
-  book(input: BookInput!): Book!
-}
-
 input BookInput {
   id: ID!
   slug: String
@@ -16,4 +12,8 @@ type Book {
   shortName: String
   chapterCount: Int
   verseCount: Int
+}
+
+type Query {
+  book(input: BookInput!): Book!
 }
