@@ -20,11 +20,12 @@ func NewBibleRepository(db *gorm.DB) BibleRepository {
 }
 
 type BibleTextInput struct {
-	Bible      string
+	Version    string
 	Book       string
-	Chapter    string
-	StartVerse string
-	EndVerse   string
+	Chapter    int
+	StartVerse int
+	EndVerse   int
+	Cursor     int
 	Offset     int
 	Limit      int
 }
@@ -35,25 +36,28 @@ func (r *bibleRepository) GetBibleText(i BibleTextInput) ([]models.Verse, int, e
 	var totalItems int64
 
 	query := db.Table("verses v").
-		Select("v.*, bv.text, b.name as book_name").
-		Joins("left join books b on b.id = v.book_id").
-		Joins(fmt.Sprintf("left join bible_%s bv on bv.verse_id = v.id", i.Bible)).
-		Where("b.id::varchar ilike ? OR b.slug ilike ? OR b.short_name ilike ?", i.Book, i.Book, i.Book)
+		Select("v.*, bv.text").
+		Joins(fmt.Sprintf("left join bible_%s bv on bv.verse_id = v.id", i.Version))
 
-	if i.Chapter != "" {
-		query = query.Where("v.chapter_num = ?", i.Chapter)
-	}
-
-	if i.StartVerse != "" {
-		query = query.Where("v.verse_num >= ?", i.StartVerse)
-
-		if i.EndVerse == "" {
-			query = query.Where("v.verse_num <= ?", i.StartVerse)
+	if i.Cursor != 0 {
+		query = query.Where("v.id >= ?", i.Cursor)
+	} else {
+		if i.Book != "" {
+			query = query.Where("b.id::varchar ilike ? OR b.slug ilike ? OR b.short_name ilike ?", i.Book, i.Book, i.Book)
 		}
-	}
+		if i.Chapter != 0 {
+			query = query.Where("v.chapter_num = ?", i.Chapter)
+		}
+		if i.StartVerse != 0 {
+			query = query.Where("v.verse_num >= ?", i.StartVerse)
 
-	if i.EndVerse != "" {
-		query = query.Where("v.verse_num <= ?", i.EndVerse)
+			if i.EndVerse == 0 {
+				query = query.Where("v.verse_num <= ?", i.StartVerse)
+			}
+		}
+		if i.EndVerse != 0 {
+			query = query.Where("v.verse_num <= ?", i.EndVerse)
+		}
 	}
 
 	query.Count(&totalItems)

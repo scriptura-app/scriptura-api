@@ -9,12 +9,12 @@ type Verse struct {
 	Id            int    `json:"id"`
 	Type          string `json:"type"`
 	Self          string `json:"self"`
+	BookId        uint   `json:"bookId,omitempty"`
 	BookName      string `json:"bookName,omitempty"`
 	ChapterNum    uint   `json:"chapterNum,omitempty"`
 	VerseNum      uint   `json:"verseNum,omitempty"`
 	YearWritten   int    `json:"yearWritten,omitempty"`
 	Text          string `json:"text,omitempty"`
-	BookId        uint   `json:"bookId,omitempty"`
 	TheographicId string `json:"-"`
 	VerseCode     uint   `json:"verseCode,omitempty"`
 }

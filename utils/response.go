@@ -12,10 +12,10 @@ type Response struct {
 type SliceResponse struct {
 	Data       interface{} `json:"data,omitempty"`
 	Pagination struct {
-		TotalItems  int `json:"totalItems,omitempty"`
-		CurrentPage int `json:"currentPage,omitempty"`
-		PageSize    int `json:"pageSize,omitempty"`
-		TotalPages  int `json:"totalPages,omitempty"`
+		Total  int `json:"total,omitempty"`
+		Offset int `json:"offset,omitempty"`
+		Cursor int `json:"cursor,omitempty"`
+		Limit  int `json:"limit"`
 	} `json:"pagination,omitempty"`
 	Response
 }
@@ -32,13 +32,13 @@ func FormatResponse(resource interface{}) []byte {
 	return out
 }
 
-func FormatPaginationResponse(resources interface{}, totalItems int, offset int, limit int) []byte {
+func FormatPaginationResponse(resources interface{}, total int, offset int, limit int, cursor int) []byte {
 	var response SliceResponse
 	response.Data = resources
-	response.Pagination.CurrentPage = offset/limit + 1
-	response.Pagination.TotalItems = totalItems
-	response.Pagination.PageSize = limit
-	response.Pagination.TotalPages = (totalItems + limit - 1) / limit
+	response.Pagination.Total = total
+	response.Pagination.Offset = offset
+	response.Pagination.Limit = limit
+	response.Pagination.Cursor = cursor
 	out, _ := json.Marshal(response)
 	return out
 }
